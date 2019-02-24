@@ -19,6 +19,9 @@
     "dependencies": {
         "koa": "2.5.2",
         "koa-bodyparser": "^4.2.1",
-        "koa-router": "^7.4.0"
+        "koa-router": "^7.4.0",
+        "mongodb": "^3.1.13",
+        "tcb-admin-node": "^1.4.3",
+        "wx-server-sdk": "^0.1.3"
     }
 }

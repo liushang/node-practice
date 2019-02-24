@@ -18,17 +18,33 @@ function addMapping(router, mapping) {
 }
 
 function addControllers(router, dir) {
-    var files = fs.readdirSync(__dirname + '/controllers');
-    var js_files = files.filter((f) => {
-        return f.endsWith('.js');
-    });
+    var js_files = traverseDir(`${__dirname}/controllers`, router)
+    console.log(js_files)
+    // for (var f of js_files) {
+    //     console.log(`process controller: ${f}...`);
+    //     console.log(__dirname + '\\controllers\\' + f)
+    //     let mapping = require(__dirname + '/controllers/' + f);
+    //     addMapping(router, mapping);
+    // }
+}
 
-    for (var f of js_files) {
-        console.log(`process controller: ${f}...`);
-        console.log(__dirname + '\\controllers\\' + f)
-        let mapping = require(__dirname + '/controllers/' + f);
-        addMapping(router, mapping);
-    }
+function traverseDir (filesPath, router) {
+    console.log('遍历开始')
+    console.log(filesPath)
+    var files = fs.readdirSync(filesPath);
+    console.log(files)
+    var jsFiles = files.forEach( f1 => {
+        console.log(f1)
+        let fileNextPath = `${filesPath}/${f1}`
+        if (f1.endsWith('.js')) {
+            let mapping = require(fileNextPath);
+            addMapping(router, mapping);
+        } else if (fs.statSync(fileNextPath).isDirectory()) {
+            console.log('文件夹')
+            traverseDir(fileNextPath, router)
+        }
+    } )
+    console.log('便利结束')
 }
 
 module.exports = function (dir) {

@@ -1,0 +1,16 @@
+{
+    "host": "184.170.222.138",
+    "username": "root",
+    "password": "ZcCccacZYN2m",
+    "remotePath": "root/node",
+    "protocol": "sftp",
+    "port": 28934,
+    "fileNameEncoding": "utf8",
+    "autoUpload": true,
+    "autoDelete": false,
+    "autoDownload": false,
+    "ignore": [
+        ".git",
+        "/.vscode"
+    ]
+}
