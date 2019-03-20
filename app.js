@@ -12,8 +12,8 @@ const cloud = require('tcb-admin-node');
 // env如果不指定将使用默认环境
 cloud.init({
   env: 'programmer-note-4417dc',
-  secretId: 'AKID2173uYFn9EQmxuSaVn4DB4P5zpXAH7j7',
-  secretKey: 'JOEXrWMJ592lFpU0MUs04tyqPAeZMYWc',
+  secretId: 'AKIDTQQAgnqOTBf6Tc9O2VWlsjLsCH69Ft3r',
+  secretKey: '940juQ8dGzDyVmybiallV1kxujzJODm7',
 });
 setTimeout(() => {
     const db = cloud.database();
