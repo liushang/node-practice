@@ -117,7 +117,7 @@ let savePartDetailByTitle = async (ctx, next) => {
     }
 };
 var createTitle = async (ctx, next) => {
-    const { title, discipline, skill, profession } = ctx.request.body
+    const { title, discipline, skill, profession, type } = ctx.request.body
     const db = cloud.database();
     const basicPartSet = db.collection('basicPartSet');
     const basicPartDetail = db.collection('basicPartDetail');
@@ -128,7 +128,8 @@ var createTitle = async (ctx, next) => {
             skill,
             profession,
             creator: 'admin',
-            createTime: new Date().getTime()
+            createTime: new Date().getTime(),
+            type,
         })
         await basicPartDetail.add({
             title,
@@ -153,9 +154,78 @@ var createTitle = async (ctx, next) => {
         }
     }
 };
-
+var deletePart = async (ctx, next) => {
+    const { title, skill } = ctx.request.body
+    const db = cloud.database();
+    const basicPartSet = db.collection('basicPartSet');
+    const basicPartDetail = db.collection('basicPartDetail');
+    try {
+        await basicPartSet.where({
+            title,
+            skill,
+        }).remove()
+        await basicPartDetail.where({
+            title,
+            skill,
+        }).remove()
+        let res = await basicPartSet.limit(10).where({
+            skill,
+        }).get()
+        ctx.response.type = 'application/json'
+        ctx.response.body = {
+            code: 200,
+            data: res.data
+        }
+    } catch(err) {
+        ctx.response.type = 'application/json'
+        ctx.response.body = {
+            code: 500,
+            data:'插入数据失败'
+        }
+    }
+};
+var modPartInfo = async (ctx, next) => {
+    const { title, skill, originTitle } = ctx.request.body
+    console.log(originTitle)
+    const db = cloud.database();
+    const basicPartSet = db.collection('basicPartSet');
+    const basicPartDetail = db.collection('basicPartDetail');
+    try {
+        if (originTitle) {
+            console.log(originTitle)
+            await basicPartSet.where({
+                title: originTitle,
+                skill,
+            }).update({
+                title
+            })
+            await basicPartDetail.where({
+                title: originTitle,
+                skill,
+            }).update({
+                title
+            })
+        }
+        let res = await basicPartSet.limit(10).where({
+            skill,
+        }).get()
+        ctx.response.type = 'application/json'
+        ctx.response.body = {
+            code: 200,
+            data: res.data
+        }
+    } catch(err) {
+        ctx.response.type = 'application/json'
+        ctx.response.body = {
+            code: 500,
+            data:'插入数据失败'
+        }
+    }
+};
 module.exports = {
     'POST /api/code/basic/part/createTitle': createTitle,
+    'POST /api/code/basic/part/deletePart': deletePart,
     'POST /api/code/basic/part/getPartDetailByTitle': getPartDetailByTitle,
     'POST /api/code/basic/part/savePartDetailByTitle': savePartDetailByTitle,
+    'POST /api/code/basic/part/modPartInfo': modPartInfo,
 };
