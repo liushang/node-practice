@@ -53,7 +53,7 @@ function getUserInfo (code) {
                 var result = JSON.parse(iconv.decode(buff, "utf8"));//转码//var result = buff.toString();//不需要转编码,直接tostring
                 console.log(result)
                 const { session_key: sessionKey, openid } = result
-                const secret = 'jihuihunmengyujuntong' + new Date().getTime();
+                const secret = 'jihuihunmengyujuntong';
                 const token = crypto.createHmac('sha256', secret).update(openid).digest('hex');
                 console.log(token)
                 const { data: userObj } = await userOpenIdSessionKey.where({
