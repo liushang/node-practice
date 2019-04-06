@@ -15,18 +15,15 @@ cloud.init({
   secretId: 'AKIDTQQAgnqOTBf6Tc9O2VWlsjLsCH69Ft3r',
   secretKey: '940juQ8dGzDyVmybiallV1kxujzJODm7',
 });
-setTimeout(() => {
-    const db = cloud.database();
-    const userCollection = db.collection('tudo');
-    console.log('啊啊啊eeeeee啊')
-    userCollection.doc('000001').get().then(res => {
-        // res.data 包含该记录的数据
-        console.log('获取成功')
-        console.log(res)
-      }, err => {
-          console.log(err)
-      })
-}, 5000)
+const db = cloud.database();
+const userCollection = db.collection('tudo');
+userCollection.doc('000001').get().then(res => {
+    // res.data 包含该记录的数据
+    console.log('获取成功')
+    console.log(res)
+  }, err => {
+      console.log(err)
+  })
 
 
 const app = new Koa()

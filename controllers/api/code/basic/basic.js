@@ -3,6 +3,7 @@ const cloud = require('tcb-admin-node');
 // mongodb链接
 const MongoClient = require('mongodb').MongoClient
 const MongoUrl = 'mongodb://184.170.222.138:27018/table1'
+const httpFunc = require('../common/utilObj/httpFunc')
 let getDisciplines = async (ctx, next) => {
     const db = cloud.database();
     const disciplineSet = db.collection('disciplineSet');
@@ -68,13 +69,22 @@ let getSkillsByProfession = async (ctx, next) => {
 };
 
 let getPartsBySkill = async (ctx, next) => {
-    const { skill } = ctx.query
+    const { skill, index } = ctx.query
     const db = cloud.database();
     const basicPartSet = db.collection('basicPartSet');
     try {
-        let res = await basicPartSet.where({
-            skill,
-        }).get()
+        let res
+        console.log(index)
+        if (index) {
+            res = await basicPartSet.where({
+                skill,
+                catalogueIndex: index
+            }).get()
+        } else {
+            res = await basicPartSet.where({
+                skill,
+            }).get()
+        }
         ctx.response.type = 'application/json'
         ctx.response.body = {
             code: 200,
@@ -120,4 +130,17 @@ module.exports = {
     'GET /api/code/basic/getProfessionsByDiscipline': getProfessionsByDiscipline,
     'GET /api/code/basic/getSkillsByProfession': getSkillsByProfession,
     'GET /api/code/basic/getPartsBySkill': getPartsBySkill,
+    'POST /api/code/basic/changeCatalogue': async ( ctx, next ) => {
+        await httpFunc(ctx, next, async ( { deQuery, deBody }, db ) => {
+            console.log(deBody, deQuery)
+            const { catalogue, skill } = { ...deBody, ...deQuery }
+            console.log(skill)
+            const bannerInfo = db.collection('skillSet');
+            return await bannerInfo.where({
+                sName: skill
+            }).update({
+                catalogue: JSON.parse(catalogue)
+            });
+        })
+    }
 };

@@ -140,7 +140,9 @@ var createTitle = async (ctx, next) => {
             creator: 'admin',
             createTime: new Date().getTime()
         })
-        let res = await basicPartSet.limit(10).get()
+        let res = await basicPartSet.limit(10).where({
+            skill,
+        }).get()
         ctx.response.type = 'application/json'
         ctx.response.body = {
             code: 200,
