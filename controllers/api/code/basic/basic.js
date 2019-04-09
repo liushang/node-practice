@@ -69,22 +69,25 @@ let getSkillsByProfession = async (ctx, next) => {
 };
 
 let getPartsBySkill = async (ctx, next) => {
-    const { skill, index } = ctx.query
+    const { skill, one, two, three } = ctx.query
+    console.log(one, two, three, skill)
+    let searchQuery = { skill }
+    one !== null && ( searchQuery.catalogueOne = one )
+    two !== null && ( searchQuery.catalogueTwo = two )
+    three !== null && ( searchQuery.catalogueThree = three )
     const db = cloud.database();
     const basicPartSet = db.collection('basicPartSet');
     try {
         let res
-        console.log(index)
-        if (index) {
-            res = await basicPartSet.where({
-                skill,
-                catalogueIndex: index
-            }).get()
-        } else {
-            res = await basicPartSet.where({
-                skill,
-            }).get()
-        }
+        // console.log(index)
+        // if (index) {
+        //     res = await basicPartSet.where({ skill }).get()
+        // } else {
+        //     res = await basicPartSet.where({
+        //         skill,
+        //     }).get()
+        // }
+        res = await basicPartSet.where(searchQuery).get()
         ctx.response.type = 'application/json'
         ctx.response.body = {
             code: 200,
